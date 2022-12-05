@@ -55,9 +55,12 @@ route.get('/', async (req, res) => {
             }
             return comapnyWiseProduct;
         })
-       
+       if(!cat || !last10Product ){
+        res.json("Data is not found");
+       }
     } catch (error) {
         console.log(error)
+        res.json(error);
     }
 
 })
