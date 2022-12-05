@@ -38,29 +38,33 @@ route.post('/add_category', async (req, res) => {
 route.get('/', async (req, res) => {
 
     try {
-        const cat = await Category.find();
-        // console.log(cat);
-        
+        console.log("I am in get route of products");
+        const cat = await Category.find();        
         const legthOfCategory=cat.length;
         const last10Product= await Product.find().sort({_id:-1}).limit(10);
-        // console.log(cat);
-        const comapnyWiseProduct=[];
-        cat.map(async(e, index) => {
-            let allProducts=await Product.find({p_brand:e.companyType})
-            // comapnyWiseProduct.push(allProducts);
-            key=e.companyType            
-            comapnyWiseProduct.push(allProducts);            
-            if((index+1)===legthOfCategory){
-                res.json({comapnyWiseProduct,last10Product:last10Product,cat});
-            }
-            return comapnyWiseProduct;
-        })
-       if(!cat || !last10Product ){
-        res.json("Data is not found");
-       }
+        // console.log(legthOfCategory);
+        if(last10Product){
+            console.log(last10Product);
+            const comapnyWiseProduct=[];
+            cat.map(async(e, index) => {
+                let allProducts=await Product.find({p_brand:e.companyType})
+                key=e.companyType            
+                comapnyWiseProduct.push(allProducts);            
+                if((index+1)===legthOfCategory){
+                    // console.log(comapnyWiseProduct)
+                    res.json({comapnyWiseProduct,last10Product:last10Product,cat});
+                }
+                
+            })
+        }else{
+            console.log("I am else last 10 product");
+            res.json("Last 10 product is not found");
+        }
+       
+      
     } catch (error) {
         console.log(error)
-        res.json(error);
+        // res.json(error);
     }
 
 })
